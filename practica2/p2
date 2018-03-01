@@ -1,0 +1,84 @@
+from random import random
+import math
+def distancia(p1, p2):
+    return(((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**(1/2))
+class grafo:
+    def __init__(self):
+        self.n = 0 
+        self.x = dict() 
+        self.y = dict()
+        self.r = dict()
+        self.c = dict()
+        self.A = dict()
+        self.P = dict()
+        self.D = dict()
+
+    def crear(self, n):
+        self.n = n
+        for nodo in range(self.n):
+            self.x[nodo] = random()
+            self.y[nodo] = random()
+            self.r[nodo] = random() + 2
+
+    #def distancia(self, i, j):
+     #   return(((self.x[i] - self.x[j])**2 + (self.y[i] - self.y[j])**2)**(1/2))
+    
+    def conexiones(self, prob, p = 0, d = 0):
+        t = 0
+        for i in range(self.n):
+            count = 0
+            for j in range(self.n):
+                if i is not j:
+                    if abs(self.r[i] - self.r[j])/ (distancia((self.x[i], self.y[i]), (self.x[j], self.y[j])))**2 < prob:
+                        test = 0
+                        for r in range(len(self.A)):
+                            if self.x[i] is self.A[r][2] and self.y[i] is self.A[r][3] and self.x[j] is self.A[r][0] and self.y[j] is self.A[r][1]:
+                                test = test +1
+                        if test is 0:
+                            count = count +1
+                            t = t +1
+                            self.A[t] = (self.x[i], self.y[i], self.x[j], self.y[j])
+                            if p:
+                                self.P[t] = random()*10
+                            if d:
+                                self.D[t] = 1
+            self.c[i]= count
+
+    def gnuplot(self):
+        with open("nodos.dat", "w") as salida:
+            for v in range(self.n):
+                x = self.x[v]
+                y = self.y[v]
+                r = self.r[v]
+                c = self.c[v]
+                print(x, y, r, c, file=salida)
+                
+        with open("tarea1.plot", "w") as archivo:
+            print("set term png", file = archivo)
+            print("set key off", file = archivo)
+            print("set output 'grafo1.png'", file = archivo)
+            print("set xrange [-0.1:1.1]", file = archivo)
+            print("set yrange [-0.1:1.1]", file = archivo)
+            print("set size square", file = archivo)
+            num = 1
+            for a in aristas:
+                (x1, y1, x2, y2, t) = a
+                print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw {:f} head ".format(num, x1, y1, x2, y2, t), file = archivo)
+                num += 1
+            print("show arrow", file = archivo)
+            print("plot 'nodos.dat' using 1:2:3:4 with points pt 6 ps var lc palette frag var", file = archivo)
+            print("quit()", file = archivo)
+            
+                            
+                        #aqui va el par de aristas que estan conectadas.
+                        
+                            
+                            
+
+n = 10
+p = 0.2
+d = ((2)**(1/2))/2
+g = grafo()
+g.crear(n)
+g.conexiones(prob= p)
+g.gnuplot()
