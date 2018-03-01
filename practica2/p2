@@ -82,10 +82,10 @@ class grafo:
                 
                 if len(self.D) is not 0:
                     if self.D[i] is 0:
-                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 backhead filled ".format(num, x1, y1, x2, y2), file = archivo)
+                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 backhead filled size 0.1,9".format(num, x1, y1, x2, y2), file = archivo)
                         num += 1
                     else:
-                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head filled ".format(num, x1, y1, x2, y2), file = archivo)
+                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head filled size 0.1,9 ".format(num, x1, y1, x2, y2), file = archivo)
                         num += 1
                 if len(self.P) is not 0:
                     w = self.P[i]
@@ -97,7 +97,7 @@ class grafo:
                     print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 nohead ".format(num, x1, y1, x2, y2), file = archivo)
                     num += 1
             print("show arrow", file = archivo)
-            print("plot 'nodos.dat' using 1:2:3:4 with points pt 6 ps var lc palette frag var", file = archivo)
+            print("plot 'nodos.dat' using 1:2:3:4 with points pt 7 ps var lc palette frag var", file = archivo)
             print("quit()", file = archivo)
             
                             
@@ -113,3 +113,4 @@ g = grafo()
 g.crear(n)
 g.conexiones(prob, d = 1)
 g.gnuplot()
+
