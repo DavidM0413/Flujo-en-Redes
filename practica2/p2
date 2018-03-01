@@ -31,17 +31,18 @@ class grafo:
                 if i is not j:
                     if abs(self.r[i] - self.r[j])/ (distancia((self.x[i], self.y[i]), (self.x[j], self.y[j])))**2 < prob:
                         test = 0
-                        for r in range(len(self.A)):
-                            if self.x[i] is self.A[r][2] and self.y[i] is self.A[r][3] and self.x[j] is self.A[r][0] and self.y[j] is self.A[r][1]:
-                                test = test +1
-                        if test is 0:
-                            count = count +1
-                            t = t +1
-                            self.A[t] = (self.x[i], self.y[i], self.x[j], self.y[j])
-                            if p:
-                                self.P[t] = random()*10
-                            if d:
-                                self.D[t] = 1
+                        if len(self.A) is not 0:
+                            for r in range(len(self.A)):
+                                if (self.x[i] is self.A[r][2] and self.y[i] is self.A[r][3] and self.x[j] is self.A[r][0] and self.y[j] is self.A[r][1]):
+                                    test = test +1
+                            if test is 0:
+                                count = count +1
+                                t = t +1
+                                self.A[t] = (self.x[i], self.y[i], self.x[j], self.y[j])
+                                if p:
+                                    self.P[t] = random()*10
+                                if d:
+                                    self.D[t] = 1
             self.c[i]= count
 
     def gnuplot(self):
@@ -61,24 +62,24 @@ class grafo:
             print("set yrange [-0.1:1.1]", file = archivo)
             print("set size square", file = archivo)
             num = 1
-            for a in aristas:
-                (x1, y1, x2, y2, t) = a
-                print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw {:f} head ".format(num, x1, y1, x2, y2, t), file = archivo)
+            for i in range(len(self.A)):
+                (x1, y1, x2, y2, t) = self.A[i]
+                print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head ".format(num, x1, y1, x2, y2), file = archivo)
                 num += 1
             print("show arrow", file = archivo)
             print("plot 'nodos.dat' using 1:2:3:4 with points pt 6 ps var lc palette frag var", file = archivo)
             print("quit()", file = archivo)
             
                             
-                        #aqui va el par de aristas que estan conectadas.
+                       
                         
                             
                             
 
 n = 10
-p = 0.2
+prob = 0.2
 d = ((2)**(1/2))/2
 g = grafo()
 g.crear(n)
-g.conexiones(prob= p)
+g.conexiones(prob)
 g.gnuplot()
