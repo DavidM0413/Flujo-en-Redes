@@ -2,6 +2,8 @@ from random import random
 import math
 def distancia(p1, p2):
     return(((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**(1/2))
+def medio(p1, p2):
+    return(((p1[0] + p2[0])/2), ((p1[1] + p2[1])/2))
 class grafo:
     def __init__(self):
         self.n = 0 
@@ -10,8 +12,9 @@ class grafo:
         self.r = dict()
         self.c = dict()
         self.A = []
-        self.P = dict()
+        self.P = []
         self.D = dict()
+        self.aux = []
 
     def crear(self, n):
         self.n = n
@@ -44,12 +47,15 @@ class grafo:
                                 
                                 t = t +1
                                 if p:
-                                    self.P[t] = random()*10
+                                    self.P.insert(t, math.ceil(random()*10))
+                                    self.aux.insert(t, medio((self.x[i], self.y[i]), (self.x[j], self.y[j])))
                                 if d:
                                     self.D[t] = 1
             self.c[i]= count
 
     def gnuplot(self):
+        print(len(self.P))
+        print(len(self.A))
         with open("nodos.dat", "w") as salida:
             for v in range(self.n):
                 x = self.x[v]
@@ -68,8 +74,20 @@ class grafo:
             num = 1
             for i in range(len(self.A)):
                 (x1, y1, x2, y2) = self.A[i]
-                print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head ".format(num, x1, y1, x2, y2), file = archivo)
-                num += 1
+                
+                
+                if len(self.D) is not 0:
+                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head ".format(num, x1, y1, x2, y2), file = archivo)
+                    num += 1
+                if len(self.P) is not 0:
+                    w = self.P[i]
+                    (xw, yw) = self.aux[i]
+                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 nohead ".format(num, x1, y1, x2, y2), file = archivo)
+                    print("set label '{:d}' at {:f},{:f}".format(w, xw, yw), file = archivo)
+                    num += 1
+                if len(self.D) is 0 and len(self.P) is 0:
+                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 nohead ".format(num, x1, y1, x2, y2), file = archivo)
+                    num += 1
             print("show arrow", file = archivo)
             print("plot 'nodos.dat' using 1:2:3:4 with points pt 6 ps var lc palette frag var", file = archivo)
             print("quit()", file = archivo)
@@ -85,5 +103,5 @@ prob = 0.2
 d = ((2)**(1/2))/2
 g = grafo()
 g.crear(n)
-g.conexiones(prob)
+g.conexiones(prob, d = 1, p = 1)
 g.gnuplot()
