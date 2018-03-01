@@ -9,7 +9,7 @@ class grafo:
         self.y = dict()
         self.r = dict()
         self.c = dict()
-        self.A = dict()
+        self.A = []
         self.P = dict()
         self.D = dict()
 
@@ -25,20 +25,24 @@ class grafo:
     
     def conexiones(self, prob, p = 0, d = 0):
         t = 0
+        k = 0
         for i in range(self.n):
             count = 0
             for j in range(self.n):
                 if i is not j:
                     if abs(self.r[i] - self.r[j])/ (distancia((self.x[i], self.y[i]), (self.x[j], self.y[j])))**2 < prob:
                         test = 0
-                        if len(self.A) is not 0:
+                        if len(self.A) is not 0 or k is 0:
                             for r in range(len(self.A)):
                                 if (self.x[i] is self.A[r][2] and self.y[i] is self.A[r][3] and self.x[j] is self.A[r][0] and self.y[j] is self.A[r][1]):
                                     test = test +1
                             if test is 0:
+                                k = 3
                                 count = count +1
+                               
+                                self.A.insert(t,(self.x[i], self.y[i], self.x[j], self.y[j]))
+                                
                                 t = t +1
-                                self.A[t] = (self.x[i], self.y[i], self.x[j], self.y[j])
                                 if p:
                                     self.P[t] = random()*10
                                 if d:
@@ -55,15 +59,15 @@ class grafo:
                 print(x, y, r, c, file=salida)
                 
         with open("tarea1.plot", "w") as archivo:
-            print("set term png", file = archivo)
+            print("set term pdf", file = archivo)
             print("set key off", file = archivo)
-            print("set output 'grafo1.png'", file = archivo)
+            print("set output 'grafo1.pdf'", file = archivo)
             print("set xrange [-0.1:1.1]", file = archivo)
             print("set yrange [-0.1:1.1]", file = archivo)
             print("set size square", file = archivo)
             num = 1
             for i in range(len(self.A)):
-                (x1, y1, x2, y2, t) = self.A[i]
+                (x1, y1, x2, y2) = self.A[i]
                 print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head ".format(num, x1, y1, x2, y2), file = archivo)
                 num += 1
             print("show arrow", file = archivo)
