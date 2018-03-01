@@ -1,4 +1,4 @@
-from random import random
+from random import random, choice
 import math
 def distancia(p1, p2):
     return(((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**(1/2))
@@ -13,7 +13,7 @@ class grafo:
         self.c = dict()
         self.A = []
         self.P = []
-        self.D = dict()
+        self.D = []
         self.aux = []
 
     def crear(self, n):
@@ -22,6 +22,7 @@ class grafo:
             self.x[nodo] = random()
             self.y[nodo] = random()
             self.r[nodo] = random() + 2
+            self.c[nodo] = 0
 
     #def distancia(self, i, j):
      #   return(((self.x[i] - self.x[j])**2 + (self.y[i] - self.y[j])**2)**(1/2))
@@ -30,9 +31,10 @@ class grafo:
         t = 0
         k = 0
         for i in range(self.n):
-            count = 0
+            
             for j in range(self.n):
                 if i is not j:
+                    
                     if abs(self.r[i] - self.r[j])/ (distancia((self.x[i], self.y[i]), (self.x[j], self.y[j])))**2 < prob:
                         test = 0
                         if len(self.A) is not 0 or k is 0:
@@ -41,7 +43,9 @@ class grafo:
                                     test = test +1
                             if test is 0:
                                 k = 3
-                                count = count +1
+                                self.c[i] = self.c[i] +1
+                                self.c[j] = self.c[j] +1
+                                #count = count +1
                                
                                 self.A.insert(t,(self.x[i], self.y[i], self.x[j], self.y[j]))
                                 
@@ -50,8 +54,8 @@ class grafo:
                                     self.P.insert(t, math.ceil(random()*10))
                                     self.aux.insert(t, medio((self.x[i], self.y[i]), (self.x[j], self.y[j])))
                                 if d:
-                                    self.D[t] = 1
-            self.c[i]= count
+                                    self.D.insert(t,choice([0,1]))
+            #self.c[i]= count
 
     def gnuplot(self):
         print(len(self.P))
@@ -77,8 +81,12 @@ class grafo:
                 
                 
                 if len(self.D) is not 0:
-                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head ".format(num, x1, y1, x2, y2), file = archivo)
-                    num += 1
+                    if self.D[i] is 0:
+                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 backhead filled ".format(num, x1, y1, x2, y2), file = archivo)
+                        num += 1
+                    else:
+                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head filled ".format(num, x1, y1, x2, y2), file = archivo)
+                        num += 1
                 if len(self.P) is not 0:
                     w = self.P[i]
                     (xw, yw) = self.aux[i]
@@ -103,5 +111,5 @@ prob = 0.2
 d = ((2)**(1/2))/2
 g = grafo()
 g.crear(n)
-g.conexiones(prob, d = 1, p = 1)
+g.conexiones(prob, d = 1)
 g.gnuplot()
