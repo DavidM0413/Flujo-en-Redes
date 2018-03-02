@@ -24,8 +24,7 @@ class grafo:
             self.r[nodo] = random() + 2
             self.c[nodo] = 0
 
-    #def distancia(self, i, j):
-     #   return(((self.x[i] - self.x[j])**2 + (self.y[i] - self.y[j])**2)**(1/2))
+    
     
     def conexiones(self, prob, p = 0, d = 0):
         t = 0
@@ -45,7 +44,7 @@ class grafo:
                                 k = 3
                                 self.c[i] = self.c[i] +1
                                 self.c[j] = self.c[j] +1
-                                #count = count +1
+                                
                                
                                 self.A.insert(t,(self.x[i], self.y[i], self.x[j], self.y[j]))
                                 
@@ -55,11 +54,9 @@ class grafo:
                                     self.aux.insert(t, medio((self.x[i], self.y[i]), (self.x[j], self.y[j])))
                                 if d:
                                     self.D.insert(t,choice([0,1]))
-            #self.c[i]= count
+            
 
     def gnuplot(self):
-        print(len(self.P))
-        print(len(self.A))
         with open("nodos.dat", "w") as salida:
             for v in range(self.n):
                 x = self.x[v]
@@ -67,50 +64,97 @@ class grafo:
                 r = self.r[v]
                 c = self.c[v]
                 print(x, y, r, c, file=salida)
-                
-        with open("tarea1.plot", "w") as archivo:
-            print("set term pdf", file = archivo)
-            print("set key off", file = archivo)
-            print("set output 'grafo1.pdf'", file = archivo)
-            print("set xrange [-0.1:1.1]", file = archivo)
-            print("set yrange [-0.1:1.1]", file = archivo)
-            print("set size square", file = archivo)
-            num = 1
-            for i in range(len(self.A)):
-                (x1, y1, x2, y2) = self.A[i]
-                
-                
-                if len(self.D) is not 0:
+        if len(self.D) is not 0 and len(self.P) is 0:
+            with open("tarea2_dirigido.plot", "w") as archivo:
+                print("set term pdf", file = archivo)
+                print("set key off", file = archivo)
+                print("set output 'grafo_dirigido.pdf'", file = archivo)
+                print("set xrange [-0.1:1.1]", file = archivo)
+                print("set yrange [-0.1:1.1]", file = archivo)
+                print("set size square", file = archivo)
+                num = 1
+                for i in range(len(self.A)):
+                    (x1, y1, x2, y2) = self.A[i]
                     if self.D[i] is 0:
                         print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 backhead filled size 0.1,9".format(num, x1, y1, x2, y2), file = archivo)
                         num += 1
                     else:
                         print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 head filled size 0.1,9 ".format(num, x1, y1, x2, y2), file = archivo)
                         num += 1
-                if len(self.P) is not 0:
-                    w = self.P[i]
-                    (xw, yw) = self.aux[i]
-                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 nohead ".format(num, x1, y1, x2, y2), file = archivo)
-                    print("set label '{:d}' at {:f},{:f}".format(w, xw, yw), file = archivo)
-                    num += 1
-                if len(self.D) is 0 and len(self.P) is 0:
-                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 nohead ".format(num, x1, y1, x2, y2), file = archivo)
-                    num += 1
-            print("show arrow", file = archivo)
-            print("plot 'nodos.dat' using 1:2:3:4 with points pt 7 ps var lc palette frag var", file = archivo)
-            print("quit()", file = archivo)
+                print("show arrow", file = archivo)
+                print("plot 'nodos.dat' using 1:2:3:4 with points pt 7 ps var lc palette frag var", file = archivo)
+                print("quit()", file = archivo)
             
                             
-                       
-                        
-                            
-                            
+        if len(self.P) is not 0 and len(self.D) is 0:
+            with open("tarea2_ponderado.plot", "w") as archivo:
+                print("set term pdf", file = archivo)
+                print("set key off", file = archivo)
+                print("set output 'grafo_ponderado.pdf'", file = archivo)
+                print("set xrange [-0.1:1.1]", file = archivo)
+                print("set yrange [-0.1:1.1]", file = archivo)
+                print("set size square", file = archivo)
+                num = 1
+                for i in range(len(self.A)):
+                    (x1, y1, x2, y2) = self.A[i]
+                    w = self.P[i]
+                    wi = w*0.3
+                    (xw, yw) = self.aux[i]
+                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw {:f} nohead ".format(num, x1, y1, x2, y2, wi), file = archivo)
+                    print("set label '{:d}' at {:f},{:f}".format(w, xw, yw), file = archivo)
+                    num += 1
+                print("show arrow", file = archivo)
+                print("plot 'nodos.dat' using 1:2:3:4 with points pt 7 ps var lc palette frag var", file = archivo)
+                print("quit()", file = archivo)
+        if len(self.D) is 0 and len(self.P) is 0:
+            with open("tarea2_simple.plot", "w") as archivo:
+                print("set term pdf", file = archivo)
+                print("set key off", file = archivo)
+                print("set output 'grafo_simple.pdf'", file = archivo)
+                print("set xrange [-0.1:1.1]", file = archivo)
+                print("set yrange [-0.1:1.1]", file = archivo)
+                print("set size square", file = archivo)
+                num = 1
+                for i in range(len(self.A)):
+                    (x1, y1, x2, y2) = self.A[i]
+                    print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw 1 nohead ".format(num, x1, y1, x2, y2), file = archivo)
+                    num += 1
+                print("show arrow", file = archivo)
+                print("plot 'nodos.dat' using 1:2:3:4 with points pt 7 ps var lc palette frag var", file = archivo)
+                print("quit()", file = archivo)
+        if len(self.D) is not 0 and len(self.P) is not 0:
+            with open("tarea2_mixto.plot", "w") as archivo:
+                print("set term pdf", file = archivo)
+                print("set key off", file = archivo)
+                print("set output 'grafo_mixto.pdf'", file = archivo)
+                print("set xrange [-0.1:1.1]", file = archivo)
+                print("set yrange [-0.1:1.1]", file = archivo)
+                print("set size square", file = archivo)
+                num = 1
+                for i in range(len(self.A)):
+                    (x1, y1, x2, y2) = self.A[i]
+                    w = self.P[i]
+                    wi = w*0.3
+                    (xw, yw) = self.aux[i]
+                    if self.D[i] is 0:
+                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw {:f} backhead filled size 0.1,9".format(num, x1, y1, x2, y2, wi), file = archivo)
+                        print("set label '{:d}' at {:f},{:f}".format(w, xw, yw), file = archivo)
+                        num += 1
+                    else:
+                        print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw {:f} head filled size 0.1,9 ".format(num, x1, y1, x2, y2, wi), file = archivo)
+                        print("set label '{:d}' at {:f},{:f}".format(w, xw, yw), file = archivo)
+                        num += 1
+                print("show arrow", file = archivo)
+                print("plot 'nodos.dat' using 1:2:3:4 with points pt 7 ps var lc palette frag var", file = archivo)
+                print("quit()", file = archivo)
 
+
+                    
 n = 10
 prob = 0.2
-d = ((2)**(1/2))/2
-g = grafo()
-g.crear(n)
-g.conexiones(prob, d = 1)
-g.gnuplot()
+g1 = grafo()
+g1.crear(n)
+g1.conexiones(prob, p= 1, d = 1)
+g1.gnuplot()
+
 
