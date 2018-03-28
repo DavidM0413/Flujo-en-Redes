@@ -47,15 +47,19 @@ class grafo:
             u = cola.pop(0)
             usados.add(u)
             
-        for i in range(len(self.A)):
-            w = index_v((self.A[i][0], self.A[i][1]), self.nodos)
-            v = index_v((self.A[i][2], self.A[i][3]), self.nodos)
-            if w == u and v not in cola and v not in usados:
-                actual = f.get((u, v), 0)
-                dif = self.P[index_A(u, v, self.A, self.nodos)] - actual
-                if dif > 0:
-                    cola.append(v)
-                    camino[v] = (u, dif)
+            for i in range(len(self.A)):
+                w = index_v((self.A[i][0], self.A[i][1]), self.nodos)
+                v = index_v((self.A[i][2], self.A[i][3]), self.nodos)
+                if w == u and v not in cola and v not in usados:
+                    
+                    actual = f.get((u, v), 0)
+                    #print(actual)
+                    dif = self.P[index_A(u, v, self.A, self.nodos)] - actual # de aqui obtengo el indice
+                    #print(dif)
+                    if dif > 0:
+                        print("entre")
+                        cola.append(v)
+                        camino[v] = (u, dif)
         if t in usados:
             return camino
         else: # no se alcanzó
@@ -68,8 +72,8 @@ class grafo:
         f = dict()
         while True:
             aum = self.camino(s, t, f)
+            print(aum)
             if aum is None:
-                print("no jalo")
                 break # ya no hay
             incr = min(aum.values(), key = (lambda k: k[1]))[1]
             u = t
@@ -129,13 +133,19 @@ class grafo:
                                 #count = count +1
                                
                                 self.A.insert(t,(self.x[i], self.y[i], self.x[j], self.y[j]))
+                                
                                 #self.vecinos[(self.x[i], self.y[i])].add((self.x[j], self.y[j])
-                                t = t +1
+                                
                                 if p:
                                     self.P.insert(t, math.ceil(random()*10))
-                                    self.aux.insert(t, medio((self.x[i], self.y[i]), (self.x[j], self.y[j]))) #quiero esto, pero no sirve :(
+                                    self.aux.insert(t, medio((self.x[i], self.y[i]), (self.x[j], self.y[j])))
+                                if p and d is 0:
+                                    t = t +1
+                                    self.A.insert(t,(self.x[j], self.y[j], self.x[i], self.y[i]))
+                                    self.P.insert(t, self.P[t-1])
                                 if d:
                                     self.D.insert(t,choice([0,1]))
+                                t = t +1
             #self.c[i]= count
 
     def gnuplot(self):
@@ -177,9 +187,9 @@ class grafo:
                 print("set yrange [-0.1:1.1]", file = archivo)
                 print("set size square", file = archivo)
                 num = 1
-                for i in range(len(self.A)):
-                    (x1, y1, x2, y2) = self.A[i]
-                    w = self.P[i]
+                for i in range(len(self.aux)):
+                    (x1, y1, x2, y2) = self.A[2*i]
+                    w = self.P[2*i]
                     wi = w*0.3
                     (xw, yw) = self.aux[i]
                     print("set arrow {:d} from {:f}, {:f} to {:f}, {:f} lw {:f} nohead ".format(num, x1, y1, x2, y2, wi), file = archivo)
