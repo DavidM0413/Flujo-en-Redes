@@ -1,5 +1,6 @@
 from random import random, choice
 import math
+from time import time
 def distancia(p1, p2):
     return(((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**(1/2))
 def medio(p1, p2):
@@ -36,8 +37,54 @@ class grafo:
             self.nodos.insert(nodo, (self.x[nodo], self.y[nodo]))
             self.r[nodo] = random() + 2
             self.c[nodo] = 0
-        print(self.nodos[9])
-        print(self.nodos[12])
+        
+
+    def crear_1(self):
+        self.x[0] = 0
+        self.y[0] = 0
+        self.x[1] = 0
+        self.y[1] = 1
+        self.x[2] = 1
+        self.y[2] = 0
+        self.x[3] = 1
+        self.y[3] = 1
+        self.nodos.insert(0, (self.x[0], self.y[0]))
+        self.nodos.insert(1, (self.x[1], self.y[1]))
+        self.nodos.insert(2, (self.x[2], self.y[2]))
+        self.nodos.insert(3, (self.x[3], self.y[3]))
+        self.r[0] = random() + 2
+        self.r[1] = random() + 2
+        self.r[2] = random() + 2
+        self.r[3] = random() + 2
+        self.c[0] = 2
+        self.c[1] = 1
+        self.c[2] = 2
+        self.c[3] = 3
+
+    def conexion_1(self):
+        self.A.insert(0,(self.x[0], self.y[0], self.x[3], self.y[3]))
+        self.P.insert(0, 5)
+        self.A.insert(1,(self.x[3], self.y[3], self.x[0], self.y[0]))
+        self.P.insert(1, 5)
+        self.aux.insert(0, medio((self.x[0], self.y[0]), (self.x[3], self.y[3])))
+        
+        self.A.insert(2,(self.x[0], self.y[0], self.x[2], self.y[2]))
+        self.P.insert(2, 3)
+        self.A.insert(3,(self.x[2], self.y[2], self.x[0], self.y[0]))
+        self.P.insert(3, 3)
+        self.aux.insert(1, medio((self.x[0], self.y[0]), (self.x[2], self.y[2])))
+        
+        self.A.insert(4,(self.x[3], self.y[3], self.x[2], self.y[2]))
+        self.P.insert(4, 1)
+        self.A.insert(5,(self.x[2], self.y[2], self.x[3], self.y[3]))
+        self.P.insert(5, 1)
+        self.aux.insert(2, medio((self.x[3], self.y[3]), (self.x[2], self.y[2])))
+
+        self.A.insert(6,(self.x[1], self.y[1], self.x[3], self.y[3]))
+        self.P.insert(6, 10)
+        self.A.insert(7,(self.x[3], self.y[3], self.x[1], self.y[1]))
+        self.P.insert(7, 10)
+        self.aux.insert(3, medio((self.x[1], self.y[1]), (self.x[3], self.y[3])))
 
     def camino(self, s, t, f): # construcción de un camino aumentante
         cola = [s]
@@ -57,7 +104,7 @@ class grafo:
                     dif = self.P[index_A(u, v, self.A, self.nodos)] - actual # de aqui obtengo el indice
                     #print(dif)
                     if dif > 0:
-                        print("entre")
+                        #print("entre")
                         cola.append(v)
                         camino[v] = (u, dif)
         if t in usados:
@@ -72,7 +119,7 @@ class grafo:
         f = dict()
         while True:
             aum = self.camino(s, t, f)
-            print(aum)
+            #print(aum)
             if aum is None:
                 break # ya no hay
             incr = min(aum.values(), key = (lambda k: k[1]))[1]
@@ -120,7 +167,7 @@ class grafo:
             for j in range(self.n):
                 if i is not j:
                     
-                    if abs(self.r[i] - self.r[j])/ (distancia((self.x[i], self.y[i]), (self.x[j], self.y[j])))**2 < prob:
+                    if abs(self.r[i] - self.r[j])**2 < prob:
                         test = 0
                         if len(self.A) is not 0 or k is 0:
                             for r in range(len(self.A)):
@@ -242,12 +289,19 @@ class grafo:
 
 
                     
-n = 15
-prob = 0.2
-d = ((2)**(1/2))/2
-g1 = grafo()
-g1.crear(n)
-g1.conexiones(prob, p= 1)
-g1.gnuplot()
-print(g1.floyd_warshall())
-print(g1.ford_fulkerson(9,12))
+n = 10
+prob = 0.1
+
+#g1.crear_1()
+#g1.conexion_1()
+
+for i in range(5):
+    g1 = grafo()
+    g1.crear(n + i*n)
+    s = math.ceil(random()*(n + i*n))
+    t = math.ceil(random()*(n + i*n))
+    g1.conexiones(prob, p= 1)
+    t1 = time()
+    print(g1.ford_fulkerson(0,1))
+    t2 = time()
+    print(t2 - t1)
