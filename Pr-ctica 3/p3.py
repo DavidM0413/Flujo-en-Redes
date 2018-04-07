@@ -39,53 +39,7 @@ class grafo:
             self.c[nodo] = 0
         
 
-    def crear_1(self):
-        self.x[0] = 0
-        self.y[0] = 0
-        self.x[1] = 0
-        self.y[1] = 1
-        self.x[2] = 1
-        self.y[2] = 0
-        self.x[3] = 1
-        self.y[3] = 1
-        self.nodos.insert(0, (self.x[0], self.y[0]))
-        self.nodos.insert(1, (self.x[1], self.y[1]))
-        self.nodos.insert(2, (self.x[2], self.y[2]))
-        self.nodos.insert(3, (self.x[3], self.y[3]))
-        self.r[0] = random() + 2
-        self.r[1] = random() + 2
-        self.r[2] = random() + 2
-        self.r[3] = random() + 2
-        self.c[0] = 2
-        self.c[1] = 1
-        self.c[2] = 2
-        self.c[3] = 3
-
-    def conexion_1(self):
-        self.A.insert(0,(self.x[0], self.y[0], self.x[3], self.y[3]))
-        self.P.insert(0, 5)
-        self.A.insert(1,(self.x[3], self.y[3], self.x[0], self.y[0]))
-        self.P.insert(1, 5)
-        self.aux.insert(0, medio((self.x[0], self.y[0]), (self.x[3], self.y[3])))
-        
-        self.A.insert(2,(self.x[0], self.y[0], self.x[2], self.y[2]))
-        self.P.insert(2, 3)
-        self.A.insert(3,(self.x[2], self.y[2], self.x[0], self.y[0]))
-        self.P.insert(3, 3)
-        self.aux.insert(1, medio((self.x[0], self.y[0]), (self.x[2], self.y[2])))
-        
-        self.A.insert(4,(self.x[3], self.y[3], self.x[2], self.y[2]))
-        self.P.insert(4, 1)
-        self.A.insert(5,(self.x[2], self.y[2], self.x[3], self.y[3]))
-        self.P.insert(5, 1)
-        self.aux.insert(2, medio((self.x[3], self.y[3]), (self.x[2], self.y[2])))
-
-        self.A.insert(6,(self.x[1], self.y[1], self.x[3], self.y[3]))
-        self.P.insert(6, 10)
-        self.A.insert(7,(self.x[3], self.y[3], self.x[1], self.y[1]))
-        self.P.insert(7, 10)
-        self.aux.insert(3, medio((self.x[1], self.y[1]), (self.x[3], self.y[3])))
-
+    
     def camino(self, s, t, f): # construcción de un camino aumentante
         cola = [s]
         usados = set()
@@ -289,19 +243,74 @@ class grafo:
 
 
                     
-n = 10
+n = 5
 prob = 0.1
-
 #g1.crear_1()
 #g1.conexion_1()
-
-for i in range(5):
-    g1 = grafo()
-    g1.crear(n + i*n)
-    s = math.ceil(random()*(n + i*n))
-    t = math.ceil(random()*(n + i*n))
-    g1.conexiones(prob, p= 1)
-    t1 = time()
-    print(g1.ford_fulkerson(0,1))
-    t2 = time()
-    print(t2 - t1)
+med = dict()
+war = dict()
+for i in range(10):
+    b = []
+    a = []
+    for j in range(20):
+        g1 = grafo()
+        g1.crear(n + i*n)
+        s = math.ceil(random()*(n + i*n))
+        t = math.ceil(random()*(n + i*n))
+        g1.conexiones(prob, p= 1)
+        t1 = time()
+        g1.ford_fulkerson(s,t)
+        t2 = time()
+        b.append(t2 - t1)
+        t1 = time()
+        g1.floyd_warshall()
+        t2 = time()
+        a.append(t2 - t1)
+    war[i] = a
+    med[i] = b
+    
+print(med)
+with open("tiempos_nodir.csv", "w") as salida:
+    print("tiempos", file=salida)   
+    for i in range(len(med)):
+        for j in range(len(med[i])):
+            print(med[i][j], file=salida)
+            
+with open("tiempos_nodir_war.csv", "w") as salida:
+    print("tiempos", file=salida)   
+    for i in range(len(war)):
+        for j in range(len(war[i])):
+            print(war[i][j], file=salida)
+        
+med = dict()
+war = dict()
+for i in range(10):
+    b = []
+    for j in range(20):
+        g1 = grafo()
+        g1.crear(n + i*n)
+        s = math.ceil(random()*(n + i*n))
+        t = math.ceil(random()*(n + i*n))
+        g1.conexiones(prob, p= 1, d = 1)
+        t1 = time()
+        g1.ford_fulkerson(s,t)
+        t2 = time()
+        b.append(t2 - t1)
+        t1 = time()
+        g1.floyd_warshall()
+        t2 = time()
+        a.append(t2 - t1)
+    war[i] = a
+    med[i] = b
+print(med)
+with open("tiempos_dir.csv", "w") as salida:
+    print("tiempos", file=salida)
+    for i in range(len(med)):
+        for j in range(len(med[i])):
+            print(med[i][j], file=salida)
+            
+with open("tiempos_dir_war.csv", "w") as salida:
+    print("tiempos", file=salida)   
+    for i in range(len(war)):
+        for j in range(len(war[i])):
+            print(war[i][j], file=salida)
