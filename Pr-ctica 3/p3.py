@@ -286,6 +286,7 @@ med = dict()
 war = dict()
 for i in range(10):
     b = []
+    a = []
     for j in range(20):
         g1 = grafo()
         g1.crear(n + i*n)
