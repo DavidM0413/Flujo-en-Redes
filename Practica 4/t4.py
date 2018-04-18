@@ -26,7 +26,7 @@ class grafo:
         self.vecinos = dict()
         
         self.A = []
-        self.D = []
+        self.P = []
         
         self.aux = []
 
@@ -144,13 +144,13 @@ class grafo:
         for i in range(self.n):
             if i < (self.n - k):
                 self.A.insert(t,(self.x[i], self.y[i], self.x[i+k], self.y[i+k]))
-                self.D.insert(t, k)
+                self.P.insert(t, k)
                 self.vecinos[i].add(i+k)
                 self.vecinos[i+k].add(i)
                 t+=1
             else:
                 self.A.insert(t, (self.x[i], self.y[i], self.x[(i + k) - self.n], self.y[(i + k) - self.n]))
-                self.D.insert(t, k)
+                self.P.insert(t, k)
                 self.vecinos[i].add((i + k) - self.n)
                 self.vecinos[(i + k) - self.n].add(i)
                 t+=1
@@ -158,6 +158,11 @@ class grafo:
             for j in range(self.n):
                 if random() < prob:
                     self.A.insert(t, (self.x[i], self.y[i], self.x[j], self.y[j]))
+                    
+                    if abs(i-j) <= self.n/2:
+                        self.P.insert(t, abs(i-j))
+                    else:
+                        self.P.insert(t, self.n - abs(i-j))
                     t+=1
             
                     
@@ -190,11 +195,20 @@ class grafo:
 
 
                     
-n = 15
-prob = 2**(-3)
+n = 10
+prob = 2**(-5)
 test = []
 
 g1 = grafo()
 g1.crear(n)
-g1.conexiones(2, prob)
+g1.conexiones(2, 0)
 g1.gnuplot()
+
+
+
+
+
+
+
+
+
