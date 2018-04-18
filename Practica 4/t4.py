@@ -26,7 +26,7 @@ class grafo:
         self.vecinos = dict()
         
         self.A = []
-        self.P = []
+        self.D = []
         
         self.aux = []
 
@@ -139,18 +139,26 @@ class grafo:
             
                 
 
-    def conexiones(self, k):
+    def conexiones(self, k, prob):
         t = 0
         for i in range(self.n):
             if i < (self.n - k):
                 self.A.insert(t,(self.x[i], self.y[i], self.x[i+k], self.y[i+k]))
+                self.D.insert(t, k)
+                self.vecinos[i].add(i+k)
+                self.vecinos[i+k].add(i)
                 t+=1
             else:
-                if (i + k) is self.n:
-                    self.A.insert(t, (self.x[i], self.y[i], self.x[0], self.y[0]))
+                self.A.insert(t, (self.x[i], self.y[i], self.x[(i + k) - self.n], self.y[(i + k) - self.n]))
+                self.D.insert(t, k)
+                self.vecinos[i].add((i + k) - self.n)
+                self.vecinos[(i + k) - self.n].add(i)
+                t+=1
+        for i in range(self.n):
+            for j in range(self.n):
+                if random() < prob:
+                    self.A.insert(t, (self.x[i], self.y[i], self.x[j], self.y[j]))
                     t+=1
-                if (i+k) > self.n:
-                    self.A.insert(t, (self.x[i], self.y[i], self.x[k - 1], self.y[k - 1]))
             
                     
 
@@ -182,22 +190,11 @@ class grafo:
 
 
                     
-n = 10
-prob = 0.1
+n = 15
+prob = 2**(-3)
 test = []
 
 g1 = grafo()
 g1.crear(n)
-g1.conexiones(4)
+g1.conexiones(2, prob)
 g1.gnuplot()
-
-
-
-
-
-#print(g1.floyd_warshall())
-#g1.gnuplot()
-        
-
-
-
