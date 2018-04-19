@@ -141,29 +141,37 @@ class grafo:
 
     def conexiones(self, k, prob):
         t = 0
-        for i in range(self.n):
-            if i < (self.n - k):
-                self.A.insert(t,(self.x[i], self.y[i], self.x[i+k], self.y[i+k]))
-                self.P.insert(t, k)
-                self.vecinos[i].add(i+k)
-                self.vecinos[i+k].add(i)
-                t+=1
-            else:
-                self.A.insert(t, (self.x[i], self.y[i], self.x[(i + k) - self.n], self.y[(i + k) - self.n]))
-                self.P.insert(t, k)
-                self.vecinos[i].add((i + k) - self.n)
-                self.vecinos[(i + k) - self.n].add(i)
-                t+=1
+        for r in range(k):
+            for i in range(self.n):
+                if i < (self.n - (r+1)):
+                    self.A.insert(t,(self.x[i], self.y[i], self.x[i+(r+1)], self.y[i+(r+1)]))
+                    self.P.insert(t, (r+1))
+                    self.vecinos[i].add(i+(r+1))
+                    self.vecinos[i+(r+1)].add(i)
+                    t+=1
+                else:
+                    self.A.insert(t, (self.x[i], self.y[i], self.x[(i + (r+1)) - self.n], self.y[(i + (r+1)) - self.n]))
+                    self.P.insert(t, (r+1))
+                    self.vecinos[i].add((i + (r+1)) - self.n)
+                    self.vecinos[(i + (r+1)) - self.n].add(i)
+                    t+1
         for i in range(self.n):
             for j in range(self.n):
-                if random() < prob:
-                    self.A.insert(t, (self.x[i], self.y[i], self.x[j], self.y[j]))
+                if i is not j:
+                    if random() < prob:
+                        if (self.x[i], self.y[i], self.x[j], self.y[j]) not in self.A:
+                            self.A.insert(t, (self.x[i], self.y[i], self.x[j], self.y[j]))
+                            self.vecinos[i].add(j)
+                            self.vecinos[j].add(i)
                     
-                    if abs(i-j) <= self.n/2:
-                        self.P.insert(t, abs(i-j))
-                    else:
-                        self.P.insert(t, self.n - abs(i-j))
-                    t+=1
+                            if abs(i-j) <= self.n/2:
+                                self.P.insert(t, abs(i-j))
+                            else:
+                                self.P.insert(t, self.n - abs(i-j))
+                            t+=1
+        
+        
+        
             
                     
 
@@ -195,20 +203,15 @@ class grafo:
 
 
                     
-n = 10
-prob = 2**(-5)
-test = []
+n = 15
 
+
+#for i in range(10):
+prob = 2**(-4)
+    #prob = 2**(-(10-i+1))
 g1 = grafo()
 g1.crear(n)
-g1.conexiones(2, 0)
+g1.conexiones(3, prob)
 g1.gnuplot()
-
-
-
-
-
-
-
-
+print(g1.avgdist())
 
