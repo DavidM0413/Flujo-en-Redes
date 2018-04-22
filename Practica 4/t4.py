@@ -35,7 +35,7 @@ class grafo:
         self.n = n
         for nodo in range(self.n):
             
-            self.nodos.insert(nodo, ((0.5 + (0.35*cos(angulo*nodo))) ,(0.5 + (0.35*sin(angulo*nodo)))))
+            self.nodos.insert(nodo, ((0.5 + (0.5*cos(angulo*nodo))) ,(0.5 + (0.5*sin(angulo*nodo)))))
             self.x.insert(nodo, self.nodos[nodo][0])
             self.y.insert(nodo, self.nodos[nodo][1])
             self.vecinos[nodo] = set()
@@ -203,15 +203,25 @@ class grafo:
 
 
                     
-n = 15
-
-
-#for i in range(10):
-prob = 2**(-4)
-    #prob = 2**(-(10-i+1))
-g1 = grafo()
-g1.crear(n)
-g1.conexiones(3, prob)
-g1.gnuplot()
-print(g1.avgdist())
-
+n = 10
+with open("tiempos_fulk.csv", "w") as archivo:
+    print("datos", file= archivo)
+    with open("tiempos_war.csv", "w") as salida:
+        print("datos", file = salida)
+        for i in range(10):
+            cota = n/2
+            for j in range(20):
+                prob = 2**(-(10-i+1))
+                g1 = grafo()
+                g1.crear(n + i*n)
+                g1.conexiones(math.ceil(n/2), 0)
+                s = math.ceil(random()*(n + i*n))
+                t = math.ceil(random()*(n + i*n))
+                t1 = time()
+                g1.floyd_warshall()
+                t2 = time()
+                print(t2 - t1, file = salida)
+                t1 = time()
+                g1.ford_fulkerson(s,t)
+                t2 = time()
+                print(t2 - t1, file = archivo)
