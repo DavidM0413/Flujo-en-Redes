@@ -51,28 +51,31 @@ class grafo:
         self.t = (k*k) - 1
         
     def delnodo(self):
-        print(len(self.A))
+        
         
        
-        n = self.n
+        n = len(self.x)
         k = math.floor(random()*n)
-        nodo = [self.x[k], self.y[k]]
-        print(nodo)
-        del self.x[k]
-        del self.y[k]
-        del self.nodos[k]
-        agh = []
-        for i in range(len(self.A)):
-            if nodo[0] is self.A[i][0] and nodo[1] is self.A[i][1]:
-                agh.append(i)
-                
-            if nodo[0] is self.A[i][2] and nodo[1] is self.A[i][3]:
-                agh.append(i)
-        agh.reverse()
-        for j in agh:
-            del self.A[j]
-            del self.P[j]
+        if k is not 0 and k is not (n-1):
+            nodo = [self.x[k], self.y[k]]
             
+            del self.x[k]
+            del self.y[k]
+            
+            agh = []
+            for i in range(len(self.A)):
+                if i < len(self.A):
+                    if nodo[0] is self.A[i][0] and nodo[1] is self.A[i][1]:
+                        
+                        agh.append(i)
+                        
+                    if nodo[0] is self.A[i][2] and nodo[1] is self.A[i][3]:
+                        agh.append(i)
+            agh.reverse()
+            for j in agh:
+                del self.A[j]
+                del self.P[j]
+                
                
        
       
@@ -190,6 +193,7 @@ class grafo:
                         self.A.append((self.x[i], self.y[i], self.x[j], self.y[j]))
                         self.P.append(math.ceil(abs(normalvariate(5, (5**.5)))))
                         count+=1
+        print(len(self.A))
         
     
     def delarista(self):
@@ -234,8 +238,9 @@ g1 = grafo()
 g1.crear(k)
 g1.conexiones(2,0)
 print(g1.ford_fulkerson())
-#g1.delarista()
-g1.delnodo()
-print(g1.ford_fulkerson())
+for i in range(30):
+    g1.delnodo()
+    
+flujo = g1.ford_fulkerson()
+print(flujo)
 g1.gnuplot()
-
