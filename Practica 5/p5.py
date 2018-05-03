@@ -50,32 +50,32 @@ class grafo:
         self.s = 0
         self.t = (k*k) - 1
         
+        
     def delnodo(self):
         
         
        
         n = len(self.x)
+        
         k = math.floor(random()*n)
-        if k is not 0 and k is not (n-1):
+        if self.x[k] is not self.x[0] and self.y[k] is not self.y[(n-1)] and self.y[k] is not self.y[0] and self.x[k] is not self.x[(n-1)]:
             nodo = [self.x[k], self.y[k]]
             
             del self.x[k]
             del self.y[k]
             
             agh = []
-            for i in range(len(self.A)):
-                if i < len(self.A):
-                    if nodo[0] is self.A[i][0] and nodo[1] is self.A[i][1]:
+            for i in range(0,len(self.A)):
+                if (nodo[0] is self.A[i][0] and nodo[1] is self.A[i][1]) or (nodo[0] is self.A[i][2] and nodo[1] is self.A[i][3]):
                         
-                        agh.append(i)
+                    agh.append(i)
                         
-                    if nodo[0] is self.A[i][2] and nodo[1] is self.A[i][3]:
-                        agh.append(i)
-            agh.reverse()
+                    
+            agh.sort(reverse = True)    
             for j in agh:
                 del self.A[j]
                 del self.P[j]
-                
+                    
                
        
       
@@ -193,23 +193,25 @@ class grafo:
                         self.A.append((self.x[i], self.y[i], self.x[j], self.y[j]))
                         self.P.append(math.ceil(abs(normalvariate(5, (5**.5)))))
                         count+=1
-        print(len(self.A))
+        
+        
         
     
     def delarista(self):
         n = len(self.A)
         k = math.floor(random()*n)
-        del self.A[k]
-        del self.P[k]
+        if k < len(self.A):
+            del self.A[k]
+            del self.P[k]
 
     
         
         
     def gnuplot(self):
         with open("nodos.dat", "w") as salida:
-            for v in range(len(self.nodos)):
-                x = self.nodos[v][0]
-                y = self.nodos[v][1]
+            for v in range(len(self.x)):
+                x = self.x[v]
+                y = self.y[v]
                 
                 print(x, y, file=salida)
         
@@ -234,13 +236,45 @@ class grafo:
 
                     
 k = 10
-g1 = grafo()
-g1.crear(k)
-g1.conexiones(2,0)
-print(g1.ford_fulkerson())
-for i in range(30):
-    g1.delnodo()
-    
-flujo = g1.ford_fulkerson()
-print(flujo)
-g1.gnuplot()
+a = [1, 2, 3]
+with open("tiempos_fulknodo.csv", "w") as archivo:
+    print("datos", file= archivo)
+    with open("tiempos_fulkarista.csv", "w") as salida:
+        print("datos", file = salida)
+        with open("flujo_nodo.csv", "w") as dato:
+            print("datos", file = salida)
+            with open("flujo_arista.csv", "w") as numero:
+                print("datos", file = salida)
+                for i in a:
+                    for j in range(10):
+                        g1 = grafo()
+                        g1.crear(k)
+                        g1.conexiones(i,0.0003)
+                        t1 = time()
+                        flujo = g1.ford_fulkerson()
+                        t2 = time()
+                        print(t2 - t1, file = archivo)
+                        print(flujo, file = dato)
+                        while (flujo > 0):
+                            g1.delnodo()
+                            t1 = time()
+                            flujo = g1.ford_fulkerson()
+                            t2 = time()
+                            print(t2 - t1, file = archivo)
+                            print(flujo, file = dato)
+                    for j in range(10):
+                        g2 = grafo()
+                        g2.crear(k)
+                        g2.conexiones(i,0.0003)
+                        t1 = time()
+                        flujo = g2.ford_fulkerson()
+                        t2 = time()
+                        print(t2 - t1, file = salida)
+                        print(flujo, file = numero)
+                        while (flujo > 0):
+                            g1.delarista()
+                            t1 = time()
+                            flujo = g2.ford_fulkerson()
+                            t2 = time()
+                            print(flujo, file = numero)
+                            print(t2 - t1, file = salida)
