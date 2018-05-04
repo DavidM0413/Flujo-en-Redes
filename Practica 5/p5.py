@@ -33,7 +33,7 @@ class grafo:
         self.t = 0
         self.A = []
         self.P = []
-        
+        self.L = 0
         self.aux = []
 
     def crear(self, k):
@@ -177,6 +177,7 @@ class grafo:
                 
 
     def conexiones(self, l, p):
+        self.L = l
         k = self.n**(1/2)
         for i in range(self.n):
             for j in range(self.n):
@@ -196,13 +197,16 @@ class grafo:
         
         
         
+        
     
     def delarista(self):
-        n = len(self.A)
-        k = math.floor(random()*n)
-        if k < len(self.A):
-            del self.A[k]
-            del self.P[k]
+        b = 15
+        for i in range(b):
+            n = len(self.A)
+            k = math.floor(random()*n)
+            if k < len(self.A):
+                del self.A[k]
+                del self.P[k]
 
     
         
@@ -246,7 +250,8 @@ with open("tiempos_fulknodo.csv", "w") as archivo:
             with open("flujo_arista.csv", "w") as numero:
                 print("datos", file = salida)
                 for i in a:
-                    for j in range(10):
+                    for j in range(5):
+                        print(j)
                         g1 = grafo()
                         g1.crear(k)
                         g1.conexiones(i,0.0003)
@@ -262,7 +267,6 @@ with open("tiempos_fulknodo.csv", "w") as archivo:
                             t2 = time()
                             print(t2 - t1, file = archivo)
                             print(flujo, file = dato)
-                    for j in range(10):
                         g2 = grafo()
                         g2.crear(k)
                         g2.conexiones(i,0.0003)
