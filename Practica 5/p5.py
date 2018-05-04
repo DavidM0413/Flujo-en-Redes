@@ -246,39 +246,46 @@ with open("tiempos_fulknodo.csv", "w") as archivo:
     with open("tiempos_fulkarista.csv", "w") as salida:
         print("datos", file = salida)
         with open("flujo_nodo.csv", "w") as dato:
-            print("datos", file = salida)
+            print("datos", file = dato)
             with open("flujo_arista.csv", "w") as numero:
-                print("datos", file = salida)
-                for i in a:
-                    for j in range(5):
-                        print(j)
-                        g1 = grafo()
-                        g1.crear(k)
-                        g1.conexiones(i,0.0003)
-                        t1 = time()
-                        flujo = g1.ford_fulkerson()
-                        t2 = time()
-                        print(t2 - t1, file = archivo)
-                        print(flujo, file = dato)
-                        while (flujo > 0):
-                            g1.delnodo()
+                print("datos", file = numero)
+                with open("contadores.txt", "w") as cont:
+                    for i in a:
+                        for j in range(5):
+                            print(j)
+                            g1 = grafo()
+                            g1.crear(k)
+                            g1.conexiones(i,0.0003)
                             t1 = time()
                             flujo = g1.ford_fulkerson()
                             t2 = time()
                             print(t2 - t1, file = archivo)
                             print(flujo, file = dato)
-                        g2 = grafo()
-                        g2.crear(k)
-                        g2.conexiones(i,0.0003)
-                        t1 = time()
-                        flujo = g2.ford_fulkerson()
-                        t2 = time()
-                        print(t2 - t1, file = salida)
-                        print(flujo, file = numero)
-                        while (flujo > 0):
-                            g1.delarista()
+                            count = 0
+                            while (flujo > 0):
+                                g1.delnodo()
+                                t1 = time()
+                                flujo = g1.ford_fulkerson()
+                                t2 = time()
+                                print(t2 - t1, file = archivo)
+                                print(flujo, file = dato)
+                                count+= 1
+                            print("nodo", i, j, count, file= cont)
+                            g2 = grafo()
+                            g2.crear(k)
+                            g2.conexiones(i,0.0003)
                             t1 = time()
                             flujo = g2.ford_fulkerson()
                             t2 = time()
-                            print(flujo, file = numero)
                             print(t2 - t1, file = salida)
+                            print(flujo, file = numero)
+                            count = 0
+                            while (flujo > 0):
+                                g2.delarista()
+                                t1 = time()
+                                flujo = g2.ford_fulkerson()
+                                t2 = time()
+                                print(flujo, file = numero)
+                                print(t2 - t1, file = salida)
+                                count+= 1
+                            print("nodo", i, j, count, file= cont)
