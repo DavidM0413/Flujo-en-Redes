@@ -52,33 +52,20 @@ class grafo:
         
         
     def delnodo(self):
-        
-        
-       
         n = len(self.x)
-        
         k = math.floor(random()*n)
         if self.x[k] is not self.x[0] and self.y[k] is not self.y[(n-1)] and self.y[k] is not self.y[0] and self.x[k] is not self.x[(n-1)]:
             nodo = [self.x[k], self.y[k]]
-            
             del self.x[k]
             del self.y[k]
-            
             agh = []
             for i in range(0,len(self.A)):
-                if (nodo[0] is self.A[i][0] and nodo[1] is self.A[i][1]) or (nodo[0] is self.A[i][2] and nodo[1] is self.A[i][3]):
-                        
-                    agh.append(i)
-                        
-                    
+                if (nodo[0] is self.A[i][0] and nodo[1] is self.A[i][1]) or (nodo[0] is self.A[i][2] and nodo[1] is self.A[i][3]):   
+                    agh.append(i)        
             agh.sort(reverse = True)    
             for j in agh:
                 del self.A[j]
                 del self.P[j]
-                    
-               
-       
-      
     
     def camino(self, s, t, f): # construcción de un camino aumentante
         cola = [s]
@@ -87,20 +74,13 @@ class grafo:
         while len(cola) > 0:
             u = cola.pop(0)
             usados.add(u)
-            
             for i in range(len(self.A)):
-                #w = index_v((self.A[i][0], self.A[i][1]), self.nodos)
                 w = self.nodos.index((self.A[i][0], self.A[i][1]))
                 v = self.nodos.index((self.A[i][2], self.A[i][3]))
-                #v = index_v((self.A[i][2], self.A[i][3]), self.nodos)
                 if w == u and v not in cola and v not in usados:
-                    
-                    
                     actual = f.get((u, v), 0)
                     dif = self.P[index_A(u, v, self.A, self.nodos)] - actual # de aqui obtengo el indice
-                    
                     if dif > 0:
-                        
                         cola.append(v)
                         camino[v] = (u, dif)
         if t in usados:
@@ -173,8 +153,6 @@ class grafo:
             if n > 1:
                 clust += m/(n*(n-1))
         return(clust/len(self.nodos))
-            
-                
 
     def conexiones(self, l, p):
         self.L = l
@@ -184,8 +162,7 @@ class grafo:
                 if Manhattan(self.coord[i], self.coord[j]) <= l:  
                     self.A.append((self.x[i], self.y[i], self.x[j], self.y[j]))
                     self.P.append(math.ceil(abs(normalvariate(5, (5**.5)))))
-                    
-        
+
         count = 0
         for i in range(self.n):
             for j in range(self.n):
@@ -194,11 +171,7 @@ class grafo:
                         self.A.append((self.x[i], self.y[i], self.x[j], self.y[j]))
                         self.P.append(math.ceil(abs(normalvariate(5, (5**.5)))))
                         count+=1
-        
-        
-        
-        
-    
+
     def delarista(self):
         b = 15
         for i in range(b):
@@ -207,10 +180,7 @@ class grafo:
             if k < len(self.A):
                 del self.A[k]
                 del self.P[k]
-
     
-        
-        
     def gnuplot(self):
         with open("nodos.dat", "w") as salida:
             for v in range(len(self.x)):
@@ -235,10 +205,7 @@ class grafo:
              print("show arrow", file = archivo)
              print("plot 'nodos.dat' using 1:2 with points pt 7", file = archivo)
              print("quit()", file = archivo)
-            
-
-
-                    
+                   
 k = 10
 a = [1, 2, 3]
 with open("tiempos_fulknodo.csv", "w") as archivo:
